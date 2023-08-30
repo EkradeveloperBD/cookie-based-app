@@ -1,9 +1,10 @@
-export default async (req, context) => {
-    const cookies = parseCookies(context);
-    const userPreference = cookies.user_preference || 'No preference set';
-  
-    return new Response(`User Preference: ${userPreference}`, {
-      headers: { 'Content-Type': 'text/plain' },
-    });
-  };
-  
+import { parse } from 'cookie';
+import { NextRequest } from 'next/server';
+
+export default function handler(req) {
+  const cookies = parse(req.headers.cookie || '');
+
+  const userPreference = cookies.theme || 'No preference set';
+
+  return new Response(`User Preference: ${userPreference}`);
+}
