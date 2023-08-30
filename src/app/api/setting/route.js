@@ -1,13 +1,11 @@
-import { NextResponse } from 'next/server';
-import { setCookie } from 'nookies';
 
-export default async (req, context) => {
-  if (req.method === 'POST') {
-    const { preference } = req.body;
-    setCookie(context, 'user_preference', preference, {
-      maxAge: 30 * 24 * 60 * 60, // 30 days
-      path: '/',
-    });
-    return NextResponse.redirect('/preferences');
-  }
-};
+import { NextRequest, NextResponse } from 'next/server';
+import { middleware } from './middleware'; // Import the middleware
+
+export default function handler(req) {
+  // Use the middleware to modify the request
+  const modifiedReq = middleware(req);
+
+  // Use NextResponse.next() to produce the response using the modified request
+  return NextResponse.next(`Modified Authorization Header: ${modifiedReq.headers.get('Authorization')}`);
+}
